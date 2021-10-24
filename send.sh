@@ -4,26 +4,16 @@ case $1 in
   "success" )
     EMBED_COLOR=3066993
     STATUS_MESSAGE="Passed"
-    arrIN=(${$CI_JOB_URL//\// })
-    project=${arrIN[2]}
-    arrIN[0]=""
-    arrIN[1]=""
-    arrIN[2]=""
-    function join { local IFS="/$1"; shift; echo "$*"; }
-    path=$(join , ${arrIN[@]})
-    ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/${$FILENAME}"
     ;;
 
   "failure" )
     EMBED_COLOR=15158332
     STATUS_MESSAGE="Failed"
-    ARTIFACT_URL="Not available"
     ;;
 
   * )
     EMBED_COLOR=0
     STATUS_MESSAGE="Status Unknown"
-    ARTIFACT_URL="Not available"
     ;;
 esac
 
@@ -52,6 +42,15 @@ else
 fi
 
 TIMESTAMP=$(date --utc +%FT%TZ)
+
+arrIN=(${$CI_JOB_URL//\// })
+project=${arrIN[2]}
+arrIN[0]=""
+arrIN[1]=""
+arrIN[2]=""
+function join { local IFS="/$1"; shift; echo "$*"; }
+path=$(join , ${arrIN[@]})
+ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/${$FILENAME}"
 
 if [ -z $LINK_ARTIFACT ] || [ $LINK_ARTIFACT = false ] ; then
   WEBHOOK_DATA='{
