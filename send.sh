@@ -43,7 +43,11 @@ fi
 
 TIMESTAMP=$(date --utc +%FT%TZ)
 
-arrIN=(${$CI_JOB_URL//\// })
+oIFS="$IFS"
+IFS="/"
+declare -a arrIN=($CI_JOB_URL)
+IFS="$oIFS"
+unset oIFS
 project=${arrIN[2]}
 arrIN[0]=""
 arrIN[1]=""
