@@ -1,21 +1,23 @@
 #!/bin/bash
 
-case $1 in
-  "success" )
-    EMBED_COLOR=3066993
-    STATUS_MESSAGE="Passed"
-    ;;
-
-  "failure" )
-    EMBED_COLOR=15158332
-    STATUS_MESSAGE="Failed"
-    ;;
-
-  * )
-    EMBED_COLOR=0
-    STATUS_MESSAGE="Status Unknown"
-    ;;
-esac
+EMBED_COLOR=3066993
+STATUS_MESSAGE="Results"
+    
+oIFS="$IFS"
+IFS="/"
+declare -a arrIN=($CI_JOB_URL)
+IFS="$oIFS"
+unset oIFS
+    
+project=${arrIN[2]}
+arrIN[0]=""
+arrIN[1]=""
+arrIN[2]=""
+    
+function join { local IFS="/$1"; shift; echo "$*"; }
+    
+path=$(join , ${arrIN[@]})
+ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/${$FILENAME}"
 
 shift
 
@@ -42,19 +44,6 @@ else
 fi
 
 TIMESTAMP=$(date --utc +%FT%TZ)
-
-oIFS="$IFS"
-IFS="/"
-declare -a arrIN=($CI_JOB_URL)
-IFS="$oIFS"
-unset oIFS
-project=${arrIN[2]}
-arrIN[0]=""
-arrIN[1]=""
-arrIN[2]=""
-function join { local IFS="/$1"; shift; echo "$*"; }
-path=$(join , ${arrIN[@]})
-ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/${$FILENAME}"
 
 if [ -z $LINK_ARTIFACT ] || [ $LINK_ARTIFACT = false ] ; then
   WEBHOOK_DATA='{
