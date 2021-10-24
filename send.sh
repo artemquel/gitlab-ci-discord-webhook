@@ -4,7 +4,7 @@ case $1 in
   "success" )
     EMBED_COLOR=3066993
     STATUS_MESSAGE="Passed"
-    ARTIFACT_URL="$CI_JOB_URL/artifacts/download"
+    ARTIFACT_URL="$CI_JOB_URL/$FILENAME"
     ;;
 
   "failure" )
