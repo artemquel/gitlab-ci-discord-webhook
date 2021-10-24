@@ -4,7 +4,14 @@ case $1 in
   "success" )
     EMBED_COLOR=3066993
     STATUS_MESSAGE="Passed"
-    ARTIFACT_URL="$CI_JOB_URL/$FILENAME"
+    arrIN=(${$CI_JOB_URL//\// })
+    project=${arrIN[2]}
+    arrIN[0]=""
+    arrIN[1]=""
+    arrIN[2]=""
+    function join { local IFS="/$1"; shift; echo "$*"; }
+    path=$(join , ${arrIN[@]})
+    ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/${$FILENAME}"
     ;;
 
   "failure" )
