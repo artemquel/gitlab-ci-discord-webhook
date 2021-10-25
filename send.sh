@@ -18,6 +18,7 @@ function join { local IFS="/$1"; shift; echo "$*"; }
     
 path=$(join , ${arrIN[@]})
 ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/${$FILENAME}"
+echo ${ARTIFACT_URL}
 
 if [ $# -lt 1 ]; then
   echo -e "WARNING!!\nYou need to pass the WEBHOOK_URL environment variable as the second argument to this script.\nFor details & guide, visit: https://github.com/DiscordHooks/gitlab-ci-discord-webhook" && exit
@@ -43,37 +44,7 @@ fi
 
 TIMESTAMP=$(date --utc +%FT%TZ)
 
-if [ -z $LINK_ARTIFACT ] || [ $LINK_ARTIFACT = false ] ; then
-  WEBHOOK_DATA='{
-    "username": "",
-    "avatar_url": "https://gitlab.com/favicon.png",
-    "embeds": [ {
-      "color": '$EMBED_COLOR',
-      "author": {
-        "name": "Pipeline #'"$CI_PIPELINE_IID"' '"$STATUS_MESSAGE"' - '"$CI_PROJECT_PATH_SLUG"'",
-        "url": "'"$CI_PIPELINE_URL"'",
-        "icon_url": "https://gitlab.com/favicon.png"
-      },
-      "title": "'"$COMMIT_SUBJECT"'",
-      "url": "'"$URL"'",
-      "description": "'"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
-      "fields": [
-        {
-          "name": "Commit",
-          "value": "'"[\`$CI_COMMIT_SHORT_SHA\`]($CI_PROJECT_URL/commit/$CI_COMMIT_SHA)"'",
-          "inline": true
-        },
-        {
-          "name": "Branch",
-          "value": "'"[\`$CI_COMMIT_REF_NAME\`]($CI_PROJECT_URL/tree/$CI_COMMIT_REF_NAME)"'",
-          "inline": true
-        }
-        ],
-        "timestamp": "'"$TIMESTAMP"'"
-      } ]
-    }'
-else
-	WEBHOOK_DATA='{
+WEBHOOK_DATA='{
 		"username": "",
 		"avatar_url": "https://gitlab.com/favicon.png",
 		"embeds": [ {
@@ -106,7 +77,6 @@ else
 			"timestamp": "'"$TIMESTAMP"'"
 		} ]
 	}'
-fi
 
 for ARG in "$@"; do
   echo -e "[Webhook]: Sending webhook to Discord...\\n";
