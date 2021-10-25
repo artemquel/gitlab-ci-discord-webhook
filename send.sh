@@ -9,10 +9,11 @@ declare -a arrIN=($CI_JOB_URL)
 IFS="$oIFS"
 unset oIFS
     
-project=${arrIN[2]}
+project=${arrIN[3]}
 arrIN[0]=""
 arrIN[1]=""
 arrIN[2]=""
+arrIN[3]=""
     
 function join { local IFS="/$1"; shift; echo "$*"; }
     
