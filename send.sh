@@ -19,8 +19,6 @@ function join { local IFS="/$1"; shift; echo "$*"; }
     
 path=$(join , ${arrIN[@]})
 ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/$FILENAME"
-echo ${CI_JOB_URL}
-echo ${ARTIFACT_URL}
 
 if [ $# -lt 1 ]; then
   echo -e "WARNING!!\nYou need to pass the WEBHOOK_URL environment variable as the second argument to this script.\nFor details & guide, visit: https://github.com/DiscordHooks/gitlab-ci-discord-webhook" && exit
