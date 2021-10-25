@@ -17,7 +17,7 @@ arrIN[2]=""
 function join { local IFS="/$1"; shift; echo "$*"; }
     
 path=$(join , ${arrIN[@]})
-ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/${$FILENAME}"
+ARTIFACT_URL="https://${project}.gitlab.io/-/${path}/artifacts/$FILENAME"
 echo ${ARTIFACT_URL}
 
 if [ $# -lt 1 ]; then
